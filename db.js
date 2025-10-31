@@ -5,7 +5,7 @@ dotenv.config();
 
 const uri = process.env.MONGODB_URI;
 
-export async function connectDB() {
+export const connectDB = async () => {
   const client = new MongoClient(uri, {
     serverApi: {
       version: ServerApiVersion.v1,
@@ -24,4 +24,4 @@ export async function connectDB() {
     console.error("❌ Failed to connect to MongoDB:", err.message);
     throw err;
   }
-}
+};
