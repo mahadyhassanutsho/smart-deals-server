@@ -10,7 +10,8 @@ dotenv.config();
 
 const port = process.env.PORT;
 const app = express();
-const { productsCollection, bidsCollection } = await connectDB();
+const { usersCollection, productsCollection, bidsCollection } =
+  await connectDB();
 
 app.use(cors());
 app.use(express.json());
@@ -19,7 +20,26 @@ app.get("/", (_req, res) => {
   res.json({ message: "Welcome to Smart Deals API!" });
 });
 
-// Products routes
+// User Routes
+app.post("/users", async (req, res) => {
+  const user = req.body;
+  const { email, displayName, photoURL } = user;
+  const query = { email: email };
+  const userExists = await usersCollection.findOne(query);
+
+  if (userExists) {
+    res.json({ message: `User with the email ${email} already exist` });
+  } else {
+    const insertedUser = await usersCollection.insertOne({
+      email,
+      displayName,
+      photoURL,
+    });
+    res.status(201).json(insertedUser);
+  }
+});
+
+// Product Routes
 app.get("/products", async (_req, res) => {
   const cursor = productsCollection.find();
   const products = await cursor.toArray();
@@ -53,7 +73,7 @@ app.delete("/products/:id", async (req, res) => {
   res.json(deletedProduct);
 });
 
-// Bids routes
+// Bid Routes
 app.get("/bids", async (_req, res) => {
   const cursor = bidsCollection.find();
   const bids = await cursor.toArray();

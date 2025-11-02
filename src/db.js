@@ -17,10 +17,11 @@ export const connectDB = async () => {
   try {
     await client.connect();
     const db = client.db("smart_deals");
+    const usersCollection = db.collection("users");
     const productsCollection = db.collection("products");
     const bidsCollection = db.collection("bids");
     console.log("[server/db] successfully connected to mongodb!");
-    return { client, db, productsCollection, bidsCollection };
+    return { client, db, usersCollection, productsCollection, bidsCollection };
   } catch (err) {
     console.error("[server/db] failed to connect to mongodb:", err.message);
     throw err;
