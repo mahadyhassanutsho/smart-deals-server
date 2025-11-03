@@ -46,6 +46,12 @@ app.get("/products", async (_req, res) => {
   res.json(products);
 });
 
+app.get("/products/latest", async (_req, res) => {
+  const cursor = productsCollection.find().sort({ created_at: -1 }).limit(6);
+  const products = await cursor.toArray();
+  res.json(products);
+});
+
 app.get("/products/:id", async (req, res) => {
   const id = req.params.id;
   const product = await productsCollection.findOne(queryWithId(id));
