@@ -52,6 +52,14 @@ app.get("/products/latest", async (_req, res) => {
   res.json(products);
 });
 
+app.get("/products/bids/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { product: id };
+  const cursor = bidsCollection.find(query).sort({ bid_price: -1 });
+  const bids = await cursor.toArray();
+  res.json(bids);
+});
+
 app.get("/products/:id", async (req, res) => {
   const id = req.params.id;
   const product = await productsCollection.findOne(queryWithId(id));
