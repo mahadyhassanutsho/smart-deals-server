@@ -88,15 +88,16 @@ app.delete("/products/:id", async (req, res) => {
 });
 
 // Bid Routes
-app.get("/bids", async (_req, res) => {
-  const cursor = bidsCollection.find();
+app.get("/bids", async (req, res) => {
+  const email = req.query.email;
+  const query = email ? { buyer_email: email } : {};
+  const cursor = bidsCollection.find(query);
   const bids = await cursor.toArray();
   res.json(bids);
 });
 
 app.get("/bids/:id", async (req, res) => {
   const id = req.params.id;
-  console.log(ObjectId.isValid(id));
   const bid = await bidsCollection.findOne(queryWithId(id));
   res.json(bid);
 });
